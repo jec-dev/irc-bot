@@ -2,7 +2,7 @@ import socket
 
 server = "irc.freenode.net"
 channel = "#jec-dev"
-nick = "Mybot"
+botnick = "Mybot"
 
 def ping(): # responds to server pings
   ircsock.send("PONG :pingis\n")
@@ -14,7 +14,8 @@ def joinchan(chan):
   ircsock.send("JOIN "+ chan +"\n")
 
 def hello():
-  ircsock.send("PRIVMSG "+ channel +" :Hello!\n")
+  ircsock.send("PRIVMSG "+ channel +" :Hello! Welcome to jec-dev! Happy \
+          Hacking! :D\n")
 
 ircsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 ircsock.connect((server, 6667)) # Here we connect to the server using the port 6667
@@ -31,5 +32,5 @@ while 1:
   if ircmsg.find(":Hello "+ botnick) != -1:
     hello()
 
-  if ircmsg.find("PING :") != -1:
+  if ircmsg.find(":PING ") != -1:
     ping()
