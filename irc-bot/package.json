@@ -1,0 +1,16 @@
+{
+    "name": "irc-bot-package",
+    "version": "jec-dev",
+    "description":"Bot for custom admin messages",
+    "repository": {
+                    "type":"git",
+                    "url" :"https://github.com/jec-dev/irc-bot"
+                },
+    "author":"durwasa <durwasa.chakraborty@gmail.com>",
+    "scripts": {"node botwayne.js"},
+    "dependencies": {
+        "irc":"^0.4.0"
+    },
+    "engines": {"node":">=0.12.0"}
+
+}
