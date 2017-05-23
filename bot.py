@@ -1,8 +1,6 @@
 import socket
-
-server = "irc.freenode.net"
-channel = "#jec-dev"
-botnick = "Mybot"
+import time
+import datetime
 
 
 def ping():  # responds to server pings
@@ -22,23 +20,38 @@ def hello():
           Hacking! :D\n")
 
 
-ircsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-# Here we connect to the server using the port 6667
-ircsock.connect((server, 6667))
-ircsock.send("USER " + botnick + " " + botnick + " " +
-             botnick + " Test Bot\n")  # user authentication
-# here we actually assign the nick to the bot
-ircsock.send("NICK " + botnick + "\n")
+if __name__ == '__main__':
+    server = "irc.freenode.net"
+    channel = "#jec-dev"
+    botnick = "jec-dev-bot"
 
-joinchan(channel)
+    ircsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    # Here we connect to the server using the port 6667
+    ircsock.connect((server, 6667))
 
-while 1:
-    ircmsg = ircsock.recv(2048)
-    ircmsg = ircmsg.strip('\n\r')  # removing any unnecessary linebreaks.
-    print(ircmsg)  # server messages
+    ircsock.setblocking(False)
 
-    if ircmsg.find(":Hello " + botnick) != -1:
-        hello()
+    ircsock.send("USER " + botnick + " " + botnick + " " +
+                 botnick + " Test Bot\n")  # user authentication
+    # here we actually assign the nick to the bot
+    ircsock.send("NICK " + botnick + "\n")
 
-    if ircmsg.find(":PING ") != -1:
-        ping()
+    joinchan(channel)
+
+    while 1:
+        try:
+            ircmsg = ircsock.recv(2048)
+            ircmsg = ircmsg.strip('\n\r')  # removing any unnecessary linebreaks.
+            now = datetime.datetime.now()
+            fname = 'logs/' + now.date().strftime('%d-%m-%y') + '.log'
+            with open(fname, 'a') as log:
+                log.write(now.time().strftime('%H:%M')+ircmsg+'\n')
+
+            if ircmsg.find(":Hello " + botnick) != -1:
+                hello()
+
+            if ircmsg.find('PING') != -1:
+                ping()
+            time.sleep(2)
+        except Exception:
+            continue
