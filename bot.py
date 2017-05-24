@@ -45,8 +45,12 @@ if __name__ == '__main__':
         try:
             ircmsg = ircsock.recv(2048)
             ircmsg = ircmsg.strip('\n\r')  # removing any unnecessary linebreaks.
+
             now = datetime.datetime.now()
-            fname = 'logging/logs/' + now.date().strftime('%d-%m-%y') + '.log'
+            utc = now.replace(tzinfo=from_zone)
+            local = utc.astimezone(to_zone)
+
+            fname = 'logging/logs/' + local.date().strftime('%d-%m-%y') + '.log'
 
             if ircmsg.find(":Hello " + botnick) != -1:
                 hello()
@@ -55,9 +59,6 @@ if __name__ == '__main__':
                 ping()
             else:
                 with open(fname, 'a') as log:
-                    utc = now.replace(tzinfo=from_zone)
-                    local = utc.astimezone(to_zone)
-
                     split_message = ircmsg.split(' ')
                     user = split_message[0].split('!')[0]
                     ircmsg = local.time().strftime('%H:%M') + ' ' + user + ' ' + ' '.join(split_message[3:])
