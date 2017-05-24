@@ -46,7 +46,7 @@ if __name__ == '__main__':
             ircmsg = ircsock.recv(2048)
             ircmsg = ircmsg.strip('\n\r')  # removing any unnecessary linebreaks.
             now = datetime.datetime.now()
-            fname = 'logs/' + now.date().strftime('%d-%m-%y') + '.log'
+            fname = 'logging/logs/' + now.date().strftime('%d-%m-%y') + '.log'
 
             if ircmsg.find(":Hello " + botnick) != -1:
                 hello()
