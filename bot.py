@@ -1,6 +1,10 @@
 import socket
 import time
 import datetime
+from dateutil import tz
+
+from_zone = tz.gettz('UTC')
+to_zone = tz.gettz('Asia/Kolkata')
 
 
 def ping():  # responds to server pings
@@ -16,8 +20,7 @@ def joinchan(chan):
 
 
 def hello():
-    ircsock.send("PRIVMSG " + channel + " :Hello! Welcome to jec-dev! Happy \
-          Hacking! :D\n")
+    ircsock.send("PRIVMSG " + channel + " :Hello! Welcome to jec-dev! Happy Hacking! :D\n")
 
 
 if __name__ == '__main__':
@@ -44,14 +47,22 @@ if __name__ == '__main__':
             ircmsg = ircmsg.strip('\n\r')  # removing any unnecessary linebreaks.
             now = datetime.datetime.now()
             fname = 'logs/' + now.date().strftime('%d-%m-%y') + '.log'
-            with open(fname, 'a') as log:
-                log.write(now.time().strftime('%H:%M')+ircmsg+'\n')
 
             if ircmsg.find(":Hello " + botnick) != -1:
                 hello()
 
             if ircmsg.find('PING') != -1:
                 ping()
+            else:
+                with open(fname, 'a') as log:
+                    utc = now.replace(tzinfo=from_zone)
+                    local = utc.astimezone(to_zone)
+
+                    split_message = ircmsg.split(' ')
+                    user = split_message[0].split('!')[0]
+                    ircmsg = local.time().strftime('%H:%M') + ' ' + user + ' ' + ' '.join(split_message[3:])
+                    log.write(ircmsg+'\n')
             time.sleep(2)
         except Exception:
             continue
+
