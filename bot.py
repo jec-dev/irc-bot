@@ -25,13 +25,14 @@ def hello():
     ircsock.send("PRIVMSG " + channel + " :Hello! Welcome to jec-dev! Happy Hacking! :D\n")
 
 def welcome():
+    print("welcome")
     ircsock.send("PRIVMSG " + channel + "testing welcome function will be implemented by deepika ,  remove this line \n")	
 	
 
 if __name__ == '__main__':
     server = "irc.freenode.net"
     channel = "#jec-dev"
-    botnick = "jec-dev-bot"
+    botnick = "jec-dev-botwain"
 
     ircsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # Here we connect to the server using the port 6667
@@ -39,15 +40,15 @@ if __name__ == '__main__':
 
     ircsock.setblocking(False)
 
-    ircsock.send("USER " + botnick + " " + botnick + " " +
-                 botnick + " Test Bot\n")  # user authentication
+    ircsock.send("USER " + botnick  + " " + botnick + " " +
+                botnick + " Test Bot\n")  # user authentication
     # here we actually assign the nick to the bot
     ircsock.send("NICK " + botnick + "\n")
 
     joinchan(channel)
 	
     with open("user_list_file",'r') as usernames:
-        user_list = usernames.read().split(' ')
+        user_list = usernames.read().split('\n')
 
     while 1:
         try:
@@ -74,9 +75,10 @@ if __name__ == '__main__':
                     log.write(ircmsg+'\n')
                     if user not in user_list:
                         welcome()
+                        print("hello world")
                         user_list.append(user)
                         with open("user_list_file" , 'a') as usernames:
-                            usernames.write(user+' ')
+                            usernames.write(user+'\n')
             time.sleep(2)
         except Exception:
             continue
