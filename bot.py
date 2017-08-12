@@ -22,6 +22,8 @@ def joinchan(chan):
 def hello():
     ircsock.send("PRIVMSG " + channel + " :Hello! Welcome to jec-dev! Happy Hacking! :D\n")
 
+def welcome():
+	pass
 
 if __name__ == '__main__':
     server = "irc.freenode.net"
@@ -55,6 +57,7 @@ if __name__ == '__main__':
             if ircmsg.find(":Hello " + botnick) != -1:
                 hello()
 
+			
             if ircmsg.find('PING') != -1:
                 ping()
             else:
