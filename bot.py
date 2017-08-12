@@ -3,6 +3,8 @@ import time
 import datetime
 from dateutil import tz
 
+#use four space indentation only
+
 from_zone = tz.gettz('UTC')
 to_zone = tz.gettz('Asia/Kolkata')
 
@@ -23,7 +25,8 @@ def hello():
     ircsock.send("PRIVMSG " + channel + " :Hello! Welcome to jec-dev! Happy Hacking! :D\n")
 
 def welcome():
-	pass
+    ircsock.send("PRIVMSG " + channel + "testing welcome function will be implemented by deepika ,  remove this line \n")	
+	
 
 if __name__ == '__main__':
     server = "irc.freenode.net"
@@ -42,6 +45,9 @@ if __name__ == '__main__':
     ircsock.send("NICK " + botnick + "\n")
 
     joinchan(channel)
+	
+    with open("user_list_file",'r') as usernames:
+        user_list = usernames.read().split(' ')
 
     while 1:
         try:
@@ -66,6 +72,11 @@ if __name__ == '__main__':
                     user = split_message[0].split('!')[0]
                     ircmsg = local.time().strftime('%H:%M') + ' ' + user + ' ' + ' '.join(split_message[3:])
                     log.write(ircmsg+'\n')
+                    if user not in user_list:
+                        welcome()
+                        user_list.append(user)
+                        with open("user_list_file" , 'a') as usernames:
+                            usernames.write(user+' ')
             time.sleep(2)
         except Exception:
             continue
