@@ -21,12 +21,13 @@ def joinchan(chan):
     ircsock.send("JOIN " + chan + "\n")
 
 
-def hello():
-    ircsock.send("PRIVMSG " + channel + " :Hello! Welcome to jec-dev! Happy Hacking! :D\n")
-
 def welcome():
-    print("welcome")
-    ircsock.send("PRIVMSG " + channel + "testing welcome function will be implemented by deepika ,  remove this line \n")	
+    print("inside welcome function")
+    ircsock.send("PRIVMSG " + channel + ":Hello! " + user+ " Welcome to jec-dev! Happy Hacking! :D\n")
+    ircsock.send("PRIVMSG " + channel + user + " plese introduce yourself with name, branch, sem, and area of interest ")
+
+def hello():
+    ircsock.send("PRIVMSG " + channel + ":Hello! Welcome to jec-dev! Happy Hacking! :D\n")	
 	
 
 if __name__ == '__main__':
@@ -47,7 +48,7 @@ if __name__ == '__main__':
 
     joinchan(channel)
 	
-    with open("user_list_file",'r') as usernames:
+    with open("user_list_file",'rb') as usernames:
         user_list = usernames.read().split('\n')
 
     while 1:
@@ -75,7 +76,7 @@ if __name__ == '__main__':
                     log.write(ircmsg+'\n')
                     if user not in user_list:
                         welcome()
-                        print("hello world")
+                        print("welcome called")
                         user_list.append(user)
                         with open("user_list_file" , 'a') as usernames:
                             usernames.write(user+'\n')
