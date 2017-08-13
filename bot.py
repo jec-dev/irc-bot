@@ -8,6 +8,8 @@ from dateutil import tz
 from_zone = tz.gettz('UTC')
 to_zone = tz.gettz('Asia/Kolkata')
 
+def msg_wrapper():
+    return "PRIVMSG " + channel + " "
 
 def ping():  # responds to server pings
     ircsock.send("PONG :pingis\n")
@@ -22,18 +24,15 @@ def joinchan(chan):
 
 
 def welcome():
-    print("inside welcome function")
-    ircsock.send("PRIVMSG " + channel + ":Hello! " + user+ " Welcome to jec-dev! Happy Hacking! :D\n")
-    ircsock.send("PRIVMSG " + channel + user + " plese introduce yourself with name, branch, sem, and area of interest ")
-
+    ircsock.send(msg_wrapper() + ":Hello! " + user+ " Welcome to jec-dev! Please introduce yourself with name, branch, sem, and area of interest \n ")
 def hello():
-    ircsock.send("PRIVMSG " + channel + ":Hello! Welcome to jec-dev! Happy Hacking! :D\n")	
+    ircsock.send(msg_wrapper() + ":Hello! Welcome to jec-dev! Happy Hacking! :D\n")	
 	
 
 if __name__ == '__main__':
     server = "irc.freenode.net"
     channel = "#jec-dev"
-    botnick = "jec-dev-botwain"
+    botnick = "jec-dev-bot"
 
     ircsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # Here we connect to the server using the port 6667
@@ -76,7 +75,6 @@ if __name__ == '__main__':
                     log.write(ircmsg+'\n')
                     if user not in user_list:
                         welcome()
-                        print("welcome called")
                         user_list.append(user)
                         with open("user_list_file" , 'a') as usernames:
                             usernames.write(user+'\n')
