@@ -3,8 +3,14 @@ import time
 import datetime
 from dateutil import tz
 
+# use four space indentation only
+
 from_zone = tz.gettz('UTC')
 to_zone = tz.gettz('Asia/Kolkata')
+
+
+def msg_wrapper():
+    return "PRIVMSG " + channel + " "
 
 
 def ping():  # responds to server pings
@@ -19,8 +25,12 @@ def joinchan(chan):
     ircsock.send("JOIN " + chan + "\n")
 
 
+def welcome():
+    ircsock.send(msg_wrapper() + ":Hello! " + user + " Welcome to jec-dev! Please introduce yourself with name, branch, sem, and area of interest \n ")
+
+
 def hello():
-    ircsock.send("PRIVMSG " + channel + " :Hello! Welcome to jec-dev! Happy Hacking! :D\n")
+    ircsock.send(msg_wrapper() + ":Hello! Welcome to jec-dev! Happy Hacking! :D\n")
 
 
 if __name__ == '__main__':
@@ -35,11 +45,14 @@ if __name__ == '__main__':
     ircsock.setblocking(False)
 
     ircsock.send("USER " + botnick + " " + botnick + " " +
-                 botnick + " Test Bot\n")  # user authentication
+                botnick + " Test Bot\n")  # user authentication
     # here we actually assign the nick to the bot
     ircsock.send("NICK " + botnick + "\n")
 
     joinchan(channel)
+
+    with open("user_list_file", 'rb') as usernames:
+        user_list = usernames.read().split('\n')
 
     while 1:
         try:
@@ -63,6 +76,11 @@ if __name__ == '__main__':
                     user = split_message[0].split('!')[0]
                     ircmsg = local.time().strftime('%H:%M') + ' ' + user + ' ' + ' '.join(split_message[3:])
                     log.write(ircmsg+'\n')
+                    if user not in user_list:
+                        welcome()
+                        user_list.append(user)
+                        with open("user_list_file", 'a') as usernames:
+                            usernames.write(user+'\n')
             time.sleep(2)
         except Exception:
             continue
