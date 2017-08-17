@@ -3,13 +3,15 @@ import time
 import datetime
 from dateutil import tz
 
-#use four space indentation only
+# use four space indentation only
 
 from_zone = tz.gettz('UTC')
 to_zone = tz.gettz('Asia/Kolkata')
 
+
 def msg_wrapper():
     return "PRIVMSG " + channel + " "
+
 
 def ping():  # responds to server pings
     ircsock.send("PONG :pingis\n")
@@ -24,10 +26,12 @@ def joinchan(chan):
 
 
 def welcome():
-    ircsock.send(msg_wrapper() + ":Hello! " + user+ " Welcome to jec-dev! Please introduce yourself with name, branch, sem, and area of interest \n ")
+    ircsock.send(msg_wrapper() + ":Hello! " + user + " Welcome to jec-dev! Please introduce yourself with name, branch, sem, and area of interest \n ")
+
+
 def hello():
-    ircsock.send(msg_wrapper() + ":Hello! Welcome to jec-dev! Happy Hacking! :D\n")	
-	
+    ircsock.send(msg_wrapper() + ":Hello! Welcome to jec-dev! Happy Hacking! :D\n")
+
 
 if __name__ == '__main__':
     server = "irc.freenode.net"
@@ -40,14 +44,14 @@ if __name__ == '__main__':
 
     ircsock.setblocking(False)
 
-    ircsock.send("USER " + botnick  + " " + botnick + " " +
+    ircsock.send("USER " + botnick + " " + botnick + " " +
                 botnick + " Test Bot\n")  # user authentication
     # here we actually assign the nick to the bot
     ircsock.send("NICK " + botnick + "\n")
 
     joinchan(channel)
-	
-    with open("user_list_file",'rb') as usernames:
+
+    with open("user_list_file", 'rb') as usernames:
         user_list = usernames.read().split('\n')
 
     while 1:
@@ -64,7 +68,6 @@ if __name__ == '__main__':
             if ircmsg.find(":Hello " + botnick) != -1:
                 hello()
 
-			
             if ircmsg.find('PING') != -1:
                 ping()
             else:
@@ -76,7 +79,7 @@ if __name__ == '__main__':
                     if user not in user_list:
                         welcome()
                         user_list.append(user)
-                        with open("user_list_file" , 'a') as usernames:
+                        with open("user_list_file", 'a') as usernames:
                             usernames.write(user+'\n')
             time.sleep(2)
         except Exception:
